@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* * {
+} */
+
+body {
+  background-color: #2d2d2d;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+}
+
+input {
+  background-color: #454545;
+  height: 30px;
+  border-radius: 5px;
+  width: 100%;
+  outline: none;
+  padding: 0px 10px;
+}
