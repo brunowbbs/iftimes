@@ -1,19 +1,19 @@
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
-import { useEffect, useState } from "react";
-import { api } from "../../services/api";
 
-type Time = {
-  id: number;
-  nome: string;
-  img: string;
-};
+import { getTimes } from "./services";
 
 export default function Home() {
   const navigate = useNavigate();
 
-  const [times, setTimes] = useState<Time[]>([]);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["@times"],
+    queryFn: getTimes,
+    refetchOnMount: true,
+  });
 
   function getInfoUserLogged() {
     const token = localStorage.getItem("@token");
@@ -23,26 +23,38 @@ export default function Home() {
     }
   }
 
+  console.log(data);
+
   useEffect(() => {
     getInfoUserLogged();
   }, []);
 
-  async function getTimes() {
-    const token = localStorage.getItem("@token");
-
-    try {
-      const response = await api.get("/times", {
-        headers: { Authorization: token },
-      });
-      setTimes(response.data);
-    } catch (error) {
+  useEffect(() => {
+    if (error) {
       alert("Houve um erro ao buscar os times");
     }
-  }
+  }, [error]);
 
-  useEffect(() => {
-    getTimes();
-  }, []);
+  // async function getTimes() {
+  //   const token = localStorage.getItem("@token");
+
+  //   try {
+  //     const response = await api.get("/times", {
+  //       headers: { Authorization: token },
+  //     });
+  //     setTimes(response.data);
+  //   } catch (error) {
+  //     alert("Houve um erro ao buscar os times");
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   getTimes();
+  // }, []);
+
+  if (isLoading) {
+    return <h4>Loading....</h4>;
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -50,7 +62,7 @@ export default function Home() {
 
       <div className=" flex flex-1 ">
         <div className="p-5 flex flex-wrap">
-          {times.map((time) => (
+          {data?.data.map((time) => (
             <div
               onClick={() => navigate(`/products/${time.id}`)}
               className="w-[160px] h-[180px] m-2 bg-[#454545] flex flex-col justify-center items-center rounded-md p-2 cursor-pointer hover:bg-[#323232] hover:transition-all"
