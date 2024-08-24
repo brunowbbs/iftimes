@@ -3,6 +3,7 @@ import Home from "./pages/home";
 import Products from "./pages/products";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import Register from "./pages/register";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,10 @@ export default function Routes() {
     //   path: "/products/id",
     //   element: <Details />,
     // },
+    {
+      path: "/register",
+      element: <Register />,
+    },
   ]);
 
   return (
